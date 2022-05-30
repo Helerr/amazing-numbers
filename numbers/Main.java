@@ -7,38 +7,32 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter a natural number:");
         int n = scanner.nextInt();
-        isBuzzNumber(n);
-    }
 
-    public static void isBuzzNumber(int n) {
         if (n > 0) {
-            if (isEven(n)) {
-                System.out.println("This number is Even.");
-            } else {
-                System.out.println("This number is Odd.");
-            }
-            if (isDivisibleBySeven(n) || lastDigitIsSeven(n)) {
-                System.out.println("It is a Buzz number.");
-                System.out.println("Explanation: ");
-                if (isDivisibleBySeven(n) && lastDigitIsSeven(n)) {
-                    System.out.println(n + " is divisible by 7 and ends with 7.");
-                } else if (isDivisibleBySeven(n)) {
-                    System.out.println(n + " is divisible by 7.");
-                } else if (lastDigitIsSeven(n)) {
-                    System.out.println(n + " ends with 7");
-                }
-            } else {
-                System.out.println("It is not a Buzz number.");
-                System.out.println("Explanation:");
-                System.out.println(n + " is neither divisible by 7 nor does it end with 7.");
-            }
+            System.out.println("Properties of " + n);
+            System.out.println("\teven: " + isEven(n));
+            System.out.println("\todd: " + isOdd(n));
+            System.out.println("\tbuzz: " + isBuzzNumber(n));
+            System.out.println("\tduck: " + isDuckNumber(n));
         } else {
             System.out.println("This number is not natural!");
         }
     }
 
+    public static boolean isBuzzNumber(int n) {
+        if (isDivisibleBySeven(n) || lastDigitIsSeven(n)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static boolean isEven(int n) {
         return n % 2 == 0;
+    }
+
+    public static boolean isOdd(int n) {
+        return n % 2 != 0;
     }
 
     public static boolean isDivisibleBySeven(int n) {
@@ -48,5 +42,14 @@ public class Main {
     public static boolean lastDigitIsSeven(int n) {
         int temp = n % 10;
         return temp == 7;
+    }
+
+    public static boolean isDuckNumber(int n) {
+        String number = n + "";
+        if (number.contains("0")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
