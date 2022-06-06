@@ -17,7 +17,49 @@ public class Main {
                 flag = false;
                 System.out.println("Goodbye!");
             } else if (option.contains(" ")) {
-                checkListOfNumbers(option.split(" "));
+                String[] properties = option.split(" ");
+                if (properties.length == 2) {
+                    checkListOfNumbers(properties);
+                } else if (properties.length == 3) {
+                    checkNumbersWithSpecificProperty(properties);
+                } else if (properties.length == 4) {
+                    if (propertiesAreValid(properties)) {
+                        long number = Long.parseLong(properties[0]);
+                        int amount = Integer.parseInt(properties[1]);
+                        String firstProperty = properties[2].toLowerCase();
+                        String secondProperty = properties[3].toLowerCase();
+                        if (isValidProperty(firstProperty) && isValidProperty(secondProperty)) {
+                            int counter = 0;
+                            while (counter < amount) {
+                                if (checkProperty(number, firstProperty)) {
+                                    if (checkProperty(number, secondProperty)) {
+                                        checkNumber(number);
+                                        counter++;
+                                    }
+                                }
+                                number++;
+                            }
+                        } else {
+                            if (!isValidProperty(firstProperty) && !isValidProperty(secondProperty)) {
+                                System.out.println("The properties [" + firstProperty.toUpperCase() + ", " + secondProperty.toUpperCase() +
+                                        "] are wrong.");
+                                System.out.println("Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD]");
+                            } else {
+                                if (!isValidProperty(firstProperty)) {
+                                    System.out.println("The property [" + firstProperty.toUpperCase() + "] is wrong.");
+                                    System.out.println("Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD]");
+                                } else if (!isValidProperty(secondProperty)) {
+                                    System.out.println("The property [" + secondProperty.toUpperCase() + "] is wrong.");
+                                    System.out.println("Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD]");
+                                }
+                            }
+                        }
+                    } else {
+                        System.out.println("The request contains mutually exclusive properties: [" +
+                                properties[2].toUpperCase() + ", " + properties[3].toUpperCase() + "]\n" +
+                                "There are no numbers with these properties.");
+                    }
+                }
             } else {
                 checkSingleNumber(Long.parseLong(option));
             }
@@ -31,6 +73,9 @@ public class Main {
                 "- enter two natural numbers to obtain the properties of the list:\n" +
                 "\t * the first parameter represents a starting number\n" +
                 "\t * the second parameter shows how many consecutive numbers are to be printed\n" +
+                "- two natural numbers and a property to search for;\n" +
+                "- two natural numbers and two properties to search for;\n" +
+                "- separate the parameters with one space;\n" +
                 "- enter 0 to exit.");
     }
 
@@ -51,6 +96,84 @@ public class Main {
 
     }
 
+    public static void checkNumbersWithSpecificProperty(String[] arguments) {
+        long number = Long.parseLong(arguments[0]);
+        long amount = Long.parseLong(arguments[1]);
+        int counter = 0;
+        outer:
+        while (counter < amount) {
+            switch (arguments[2].toLowerCase()) {
+                case "even":
+                    if (isEven(number)) {
+                        checkNumber(number);
+                        counter++;
+                    }
+                    number++;
+                    break;
+                case "odd":
+                    if (isOdd(number)) {
+                        checkNumber(number);
+                        counter++;
+                    }
+                    number++;
+                    break;
+                case "buzz":
+                    if (isBuzzNumber(number)) {
+                        checkNumber(number);
+                        counter++;
+                    }
+                    number++;
+                    break;
+                case "duck":
+                    if (isDuckNumber(number)) {
+                        checkNumber(number);
+                        counter++;
+                    }
+                    number++;
+                    break;
+                case "palindromic":
+                    if (isPalindrome(number)) {
+                        checkNumber(number);
+                        counter++;
+                    }
+                    number++;
+                    break;
+                case "gapful":
+                    if (isGapfulNumber(number)) {
+                        checkNumber(number);
+                        counter++;
+                    }
+                    number++;
+                    break;
+                case "spy":
+                    if (isSpyNumber(number)) {
+                        checkNumber(number);
+                        counter++;
+                    }
+                    number++;
+                    break;
+                case "square":
+                    if (isSquare(number)) {
+                        checkNumber(number);
+                        counter++;
+                    }
+                    number++;
+                    break;
+                case "sunny":
+                    if (isSunny(number)) {
+                        checkNumber(number);
+                        counter++;
+                    }
+                    number++;
+                    break;
+                default:
+                    System.out.println("The property [" + arguments[2].toUpperCase() + "] is wrong.");
+                    System.out.println("Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD]");
+                    break outer;
+            }
+        }
+    }
+
     public static void checkNumber(long n) {
 
         if (checkNaturalNumber(n)) {
@@ -59,6 +182,9 @@ public class Main {
             if (isDuckNumber(n)) processingResult.add("duck");
             if (isPalindrome(n)) processingResult.add("palindromic");
             if (isGapfulNumber(n)) processingResult.add("gapful");
+            if (isSpyNumber(n)) processingResult.add("spy");
+            if (isSquare(n)) processingResult.add("square");
+            if (isSunny(n)) processingResult.add("sunny");
             if (isEven(n)) processingResult.add("even");
             if (isOdd(n)) processingResult.add("odd");
             System.out.print(n + " is ");
@@ -82,6 +208,9 @@ public class Main {
             System.out.println("\tduck: " + isDuckNumber(n));
             System.out.println("\tpalindromic: " + isPalindrome(n));
             System.out.println("\tgapful: " + isGapfulNumber(n));
+            System.out.println("\tspy: " + isSpyNumber(n));
+            System.out.println("\tsquare: " + isSquare(n));
+            System.out.println("\tsunny: " + isSunny(n));
             System.out.println("\teven: " + isEven(n));
             System.out.println("\todd: " + isOdd(n));
         } else {
@@ -144,5 +273,94 @@ public class Main {
             return n % getFirstAndLastDigit(n) == 0;
         }
         return false;
+    }
+
+    public static boolean isSpyNumber(long n) {
+        long sum = 0;
+        long prod = 1;
+        while (n > 0) {
+            long temp = n % 10;
+            sum += temp;
+            prod *= temp;
+            n /= 10;
+        }
+        return sum == prod;
+    }
+
+    public static boolean propertiesAreValid(String[] properties) {
+        String firstProperty = properties[2].toLowerCase();
+        String secondProperty = properties[3].toLowerCase();
+        if ("even".equals(firstProperty) && "odd".equals(secondProperty)
+                || "odd".equals(firstProperty) && "even".equals(secondProperty)) {
+            return false;
+        }
+        if ("duck".equals(firstProperty) && "spy".equals(secondProperty)
+                || "spy".equals(firstProperty) && "duck".equals(secondProperty)) {
+            return false;
+        }
+        if ("sunny".equals(firstProperty) && "square".equals(secondProperty)
+                || "square".equals(firstProperty) && "sunny".equals(secondProperty)) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isSquare(long n) {
+        double number = (double) n;
+
+        double squareRoot = Math.sqrt(number);
+
+        long roundedRoot = Math.round(squareRoot);
+
+        if (Math.pow(squareRoot, 2) == (roundedRoot * roundedRoot)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isSunny(long n) {
+        return isSquare(n + 1);
+    }
+
+    public static boolean checkProperty(long number, String property) {
+        switch (property.toLowerCase()) {
+            case "even":
+                return isEven(number);
+            case "odd":
+                return isOdd(number);
+            case "buzz":
+                return isBuzzNumber(number);
+            case "duck":
+                return isDuckNumber(number);
+            case "palindromic":
+                return isPalindrome(number);
+            case "gapful":
+                return isGapfulNumber(number);
+            case "spy":
+                return isSpyNumber(number);
+            case "square":
+                return isSquare(number);
+            case "sunny":
+                return isSunny(number);
+        }
+        return false;
+    }
+
+    public static boolean isValidProperty(String property) {
+        switch (property) {
+            case "even":
+            case "odd":
+            case "sunny":
+            case "square":
+            case "spy":
+            case "gapful":
+            case "palindromic":
+            case "duck":
+            case "buzz":
+                return true;
+            default:
+                return false;
+        }
     }
 }
